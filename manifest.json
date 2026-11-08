@@ -1,0 +1,12 @@
+
+{
+  "name": "Music Black",
+  "short_name": "Music Black",
+  "description": "Seu espaço musical",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "orientation": "portrait"
+}
