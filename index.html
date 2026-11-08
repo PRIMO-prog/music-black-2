@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Music Black</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #080808;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 22px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.logo span { color: #a855f7; }
+
+h2 { margin-top: 38px; }
+
+.search {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 30px;
+  background: #171717;
+  color: white;
+  font-size: 16px;
+}
+
+button {
+  background: #a855f7;
+  border: none;
+  color: white;
+  padding: 13px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.player {
+  margin-top: 35px;
+  padding: 22px;
+  background: #171717;
+  border-radius: 22px;
+  text-align: center;
+}
+
+.cover {
+  width: 210px;
+  height: 210px;
+  margin: auto;
+  background: linear-gradient(135deg,#32104d,#111);
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 75px;
+}
+
+#songName { margin-top: 22px; }
+
+#songInfo { color: #999; }
+
+audio { width: 100%; margin-top: 20px; }
+
+.library {
+  margin-top: 35px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #151515;
+  display: flex;
+  justify-content: space-around;
+  padding: 18px 5px;
+  color: #bbb;
+}
+
+footer span { text-align: center; }
+
+main { padding-bottom: 100px; }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">MUSIC <span>BLACK</span></div>
+  <span>🎧</span>
+</header>
+
+<main>
+  <h2>Sua música, seu espaço.</h2>
+
+  <input class="search" id="search"
+  placeholder="Pesquisar músicas...">
+
+  <h2>Bem-vindo ao Music Black</h2>
+  <p style="color:#999">Sua biblioteca musical começa aqui.</p>
+
+  <div class="player">
+    <div class="cover">♫</div>
+
+    <h3 id="songName">Nenhuma música selecionada</h3>
+    <p id="songInfo">Escolha uma música do seu celular</p>
+
+    <input type="file" id="file"
+    accept="audio/*" hidden>
+
+    <button onclick="document.getElementById('file').click()">
+      + Adicionar música
+    </button>
+
+    <audio id="audio" controls></audio>
+  </div>
+
+  <div class="library">
+    <h2>Minha biblioteca</h2>
+    <p style="color:#999">Suas músicas aparecerão aqui.</p>
+    <div id="playlist"></div>
+  </div>
+</main>
+
+<footer>
+  <span>⌂<br>Início</span>
+  <span>⌕<br>Buscar</span>
+  <span>♫<br>Biblioteca</span>
+</footer>
+
+<script>
+const file = document.getElementById("file");
+const audio = document.getElementById("audio");
+
+file.addEventListener("change", function() {
+  const song = this.files[0];
+
+  if (!song) return;
+
+  audio.src = URL.createObjectURL(song);
+
+  document.getElementById("songName").textContent =
+    song.name.replace(/\.[^/.]+$/, "");
+
+  document.getElementById("songInfo").textContent =
+    "Arquivo local";
+
+  const item = document.createElement("p");
+  item.textContent = "♫ " + song.name;
+  document.getElementById("playlist").appendChild(item);
+});
+
+document.getElementById("search").addEventListener("input",
+function() {
+  const term = this.value.toLowerCase();
+
+  document.querySelectorAll("#playlist p").forEach(item => {
+    item.style.display =
+      item.textContent.toLowerCase().includes(term)
+      ? "block" : "none";
+  });
+});
+</script>
+
+</body>
+</html>
+
