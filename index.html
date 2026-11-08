@@ -144,11 +144,18 @@ accept="audio/*" multiple hidden>
     <div id="playlist"></div>
   </div>
 </main>
-
 <footer>
-  <span>⌂<br>Início</span>
-  <span>⌕<br>Buscar</span>
-  <span>♫<br>Biblioteca</span>
+  <span onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    ⌂<br>Início
+  </span>
+
+  <span onclick="document.getElementById('search').focus()">
+    ⌕<br>Buscar
+  </span>
+
+  <span onclick="document.querySelector('.library').scrollIntoView({behavior:'smooth'})">
+    ♫<br>Biblioteca
+  </span>
 </footer>
 
 <script>
