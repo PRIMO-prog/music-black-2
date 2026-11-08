@@ -131,6 +131,11 @@ main { padding-bottom: 100px; }
     </button>
 
     <audio id="audio" controls></audio>
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+  <button onclick="previousSong()">⏮ Anterior</button>
+  <button onclick="nextSong()">⏭ Próxima</button>
+  <button onclick="shuffleSongs()">🔀 Aleatório</button>
+    </div>
   </div>
 
   <div class="library">
@@ -150,42 +155,61 @@ main { padding-bottom: 100px; }
 const file = document.getElementById("file");
 const audio = document.getElementById("audio");
 
-file.addEventListener("change", function() {
-  const song = this.files[0];
+let songs = [];
+let currentIndex = -1;
 
-  if (!song) return;
+function playSong(index) {
+  if (index < 0 || index >= songs.length) return;
 
-  audio.src = URL.createObjectURL(song);
-
+  currentIndex = index;
+  audio.src = URL.createObjectURL(songs[index]);
   document.getElementById("songName").textContent =
-    song.name.replace(/\.[^/.]+$/, "");
+    songs[index].name.replace(/\.[^/.]+$/, "");
+  document.getElementById("songInfo").textContent = "Arquivo local";
 
-  document.getElementById("songInfo").textContent =
-    "Arquivo local";
-
-  const item = document.createElement("p");
-  item.textContent = "♫ " + song.name;
-  document.getElementById("playlist").appendChild(item);
-});
-
-document.getElementById("search").addEventListener("input",
-function() {
-  const term = this.value.toLowerCase();
-
-  document.querySelectorAll("#playlist p").forEach(item => {
-    item.style.display =
-      item.textContent.toLowerCase().includes(term)
-      ? "block" : "none";
-  });
-});
-</script>
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .catch(error => console.error("Erro:", error));
-  });
+  audio.play();
 }
+
+file.addEventListener("change", function() {
+  const selected = Array.from(this.files);
+
+  selected.forEach(song => songs.push(song));
+
+  const playlist = document.getElementById("playlist");
+  playlist.innerHTML = "";
+
+  songs.forEach((song, index) => {
+    const item = document.createElement("p");
+    item.textContent = "♫ " + song.name;
+    item.style.cursor = "pointer";
+    item.onclick = () => playSong(index);
+    playlist.appendChild(item);
+  });
+
+  if (currentIndex === -1 && songs.length > 0) {
+    playSong(0);
+  }
+
+  this.value = "";
+});
+
+function nextSong() {
+  if (songs.length) playSong((currentIndex + 1) % songs.length);
+}
+
+function previousSong() {
+  if (songs.length) {
+    playSong((currentIndex - 1 + songs.length) % songs.length);
+  }
+}
+
+function shuffleSongs() {
+  if (songs.length) {
+    playSong(Math.floor(Math.random() * songs.length));
+  }
+}
+
+audio.addEventListener("ended", nextSong);
 </script>
 </body>
 </html>
